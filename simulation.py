@@ -43,10 +43,10 @@ class Simulation:
         F_roll = self.C_rr * self.mass * 9.81
         
         dx = np.array([
-            0,
-            0,
-            0,
-            0,
+            self.vx*np.cos(self.theta)-self.vy*np.sin(self.theta),
+            self.vx*np.sin(self.theta)+self.vy*np.cos(self.theta),
+            (self.vx/self.l_wb)*np.tan(delta),
+            ax+self.r*self.vy,
             0,
             0
         ])
@@ -73,12 +73,12 @@ class Simulation:
 
         # Dynamics equations
         dx = np.array([
-            0,  # dx/dt
-            0,  # dy/dt
-            0, # dtheta/dt
-            0, # dvx/dt with resistive forces
-            0, # dvy/dt
-            0  # dr/dt
+            self.vx*np.cos(self.theta)-self.vy*np.sin(self.theta),  # dx/dt
+            self.vx*np.sin(self.theta)+self.vy*np.cos(self.theta),  # dy/dt
+            self.r, # dtheta/dt
+            ax+self.r*self.vy, # dvx/dt with resistive forces
+            ((2*self.C_f)/self.mass)*(self.delta-((self.vy+self.l_f*self.r)/(self.vx)))+((2*self.C_r)/self.mass)*(-((self.vy+self.l_r*self.r)/(self.vx)))-self.r*self.vx, # dvy/dt
+            ((2*self.l_f*self.C_f)/self.I_f)*(self.delta-((self.vy+self.l_f*self.r)/(self.vx)))-((2*self.l_r*self.C_r)/self.I_z)*((self.vy-self.l_r*self.r)/(self.vx))  # dr/dt
         ])
         
         return dx
