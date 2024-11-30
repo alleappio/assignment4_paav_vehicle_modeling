@@ -24,8 +24,8 @@ class Simulation:
         self.x = 0                      # X position (m)
         self.y = 0                      # Y position (m)
         self.theta = 0                  # Heading angle (rad)
-        self.vx = 0.0                     # Longitudinal velocity (m/s)
-        self.vy = 0                     # Lateral velocity (m/s)
+        self.vx = 10                     # Longitudinal velocity (m/s)
+        self.vy = 10                     # Lateral velocity (m/s)
         self.r = 0                      # Yaw rate (rad/s)
 
         # Pacejka's Magic Formula coefficients
@@ -78,8 +78,8 @@ class Simulation:
             self.vx*np.sin(self.theta)+self.vy*np.cos(self.theta),  # dy/dt
             self.r, # dtheta/dt
             ax+self.r*self.vy, # dvx/dt with resistive forces
-            ((2*self.C_f)/self.mass)*(delta-((self.vy+self.l_f*self.r)/(self.vx)))+((2*self.C_r)/self.mass)*(-((self.vy+self.l_r*self.r)/(self.vx)))-self.r*self.vx, # dvy/dt
-            ((2*self.l_f*self.C_f)/self.l_f)*(delta-((self.vy+self.l_f*self.r)/(self.vx)))-((2*self.l_r*self.C_r)/self.I_z)*((self.vy-self.l_r*self.r)/(self.vx))  # dr/dt
+            ((2*self.C_f)/self.mass)*(delta-((self.vy+self.l_f*self.r)/(self.vx)))+((2*self.C_r)/self.mass)*(-((self.vy-self.l_r*self.r)/(self.vx)))-self.r*self.vx, # dvy/dt
+            ((2*self.l_f*self.C_f)/self.I_z)*(delta-((self.vy+self.l_f*self.r)/(self.vx)))-((2*self.l_r*self.C_r)/self.I_z)*((self.vy-self.l_r*self.r)/(self.vx))  # dr/dt
         ])
         
         return dx

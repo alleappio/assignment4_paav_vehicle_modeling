@@ -48,7 +48,6 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
     frequency = 0.5
 
     for step in range(steps):
-        print("aaaaaaaaaaaa")
         # Make one step simulation via model integration
         # Calculate sinusoidal steering angle
         time = step * dt
@@ -75,7 +74,7 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
 
 def main():
     # Simulation parameters
-    dt = 0.5        # Time step (s)
+    dt = 0.001        # Time step (s)
     ax = 0.0            # Constant longitudinal acceleration (m/s^2)
     steer = 0.1         # Constant steering angle (rad)
     sim_time = 5      # Simulation duration in seconds
