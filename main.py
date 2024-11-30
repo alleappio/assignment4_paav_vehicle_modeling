@@ -48,11 +48,11 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
     frequency = 0.5
 
     for step in range(steps):
-
+        print("aaaaaaaaaaaa")
         # Make one step simulation via model integration
         # Calculate sinusoidal steering angle
-        #time = step * dt
-        # steer = steer_max * np.sin(2 * np.pi * frequency * time)  # Sinusoidal steering angle
+        time = step * dt
+        steer = steer_max * np.sin(2 * np.pi * frequency * time)  # Sinusoidal steering angle
 
         sim.integrate(ax, steer)
         
@@ -65,9 +65,9 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
         r_vals.append(sim.r)
 
         # Calculate slip angles for front and rear tires
-        alpha_f = 0.0  # Front tire slip angle
-        alpha_r = 0.0         # Rear tire slip angle
-
+        alpha_f = steer - ((sim.vy+lf*sim.r)/sim.vx)  # Front tire slip angle
+        alpha_r = steer - ((sim.vy-lr*sim.r)/sim.vx)         # Rear tire slip angle
+            
         alpha_f_vals.append(alpha_f)
         alpha_r_vals.append(alpha_r)
 
@@ -77,8 +77,8 @@ def main():
     # Simulation parameters
     dt = 0.5        # Time step (s)
     ax = 0.0            # Constant longitudinal acceleration (m/s^2)
-    steer = 0.0         # Constant steering angle (rad)
-    sim_time = 0.0      # Simulation duration in seconds
+    steer = 0.1         # Constant steering angle (rad)
+    sim_time = 5      # Simulation duration in seconds
     steps = int(sim_time / dt)  # Simulation steps (30 seconds)
 
     # List of configurations
