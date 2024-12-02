@@ -42,7 +42,8 @@ class Simulation:
         v=self.vx*self.vx+self.vy*self.vy
         F_aero = (1/2)*self.rho*self.C_d*self.A*v#
         F_roll = self.C_rr * self.mass * 9.81
-        
+
+        #TODO: slide 18 
         dx = np.array([
             self.vx*np.cos(self.theta)-self.vy*np.sin(self.theta),
             self.vx*np.sin(self.theta)+self.vy*np.cos(self.theta),
@@ -53,6 +54,7 @@ class Simulation:
         ])
         return dx
 
+    # TODO: slide 29
     def linear_single_track_model(self, ax, delta):
         """ Linear single-track model with aerodynamic and rolling resistance. """
         
