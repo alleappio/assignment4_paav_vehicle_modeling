@@ -40,7 +40,7 @@ class Simulation:
         
         # Aerodynamic drag and rolling resistance forces
         v=self.vx*self.vx+self.vy*self.vy
-        F_aero = (1/2)*self.rho*self.C_d*self.A*v#
+        F_aero = (1/2)*self.rho*self.C_d*self.A*v
         F_roll = self.C_rr * self.mass * 9.81
 
         #TODO: slide 18 
@@ -63,17 +63,19 @@ class Simulation:
         alpha_r = delta - ((self.vy-self.l_r*self.r)/self.vx)         # Rear tire slip angle
 
         # Vertical forces (nominal vertical load)
-        Fz_f_nominal = 0#
-        Fz_r_nominal = 0#
+        Fz_f_nominal = (self.l_r/self.l_wb)*self.mass*9.81
+        Fz_r_nominal = (self.l_f/self.l_wb)*self.mass*9.81
 
         # Front and rear lateral forces
-        Fyf = self.B_f*self.C_f*self.D_f*alpha_f
-        Fyr = self.B_r*self.C_r*self.D_r*alpha_r
+        Fyf = Fz_f_nominal * self.D * np.sin(self.C*np.arctan(self.B*alpha_f - self.E*(self.B * alpha_f - np.arctan(self.B*alpha_f))))
+        Fyr = Fz_r_nominal * self.D * np.sin(self.C*np.arctan(self.B*alpha_r - self.E*(self.B * alpha_r - np.arctan(self.B*alpha_r))))
 
         # Aerodynamic drag and rolling resistance forces
-        F_aero = 0.0
+        v=self.vx*self.vx+self.vy*self.vy
+        F_aero = (1/2)*self.rho*self.C_d*self.A*v#
         F_roll = self.C_rr * self.mass * 9.81
 
+        F_x=F_aero + F_roll
         # Dynamics equations
         dx = np.array([
             self.vx*np.cos(self.theta)-self.vy*np.sin(self.theta),  # dx/dt
@@ -94,12 +96,12 @@ class Simulation:
         alpha_r = delta - ((self.vy-self.l_r*self.r)/self.vx)         # Rear tire slip angle
 
         # Vertical forces (nominal vertical load)
-        Fz_f_nominal = 0#
-        Fz_r_nominal = 0#
+        Fz_f_nominal = (self.l_r/self.l_wb)*self.mass*9.81
+        Fz_r_nominal = (self.l_f/self.l_wb)*self.mass*9.81
 
         # Front and rear lateral forces
-        Fyf = self.B_f*self.C_f*self.D_f*alpha_f
-        Fyr = self.B_r*self.C_r*self.D_r*alpha_r
+        Fyf = Fz_f_nominal * self.D * np.sin(self.C*np.arctan(self.B*alpha_f - self.E*(self.B * alpha_f - np.arctan(self.B*alpha_f))))
+        Fyr = Fz_r_nominal * self.D * np.sin(self.C*np.arctan(self.B*alpha_r - self.E*(self.B * alpha_r - np.arctan(self.B*alpha_r))))
 
         # Aerodynamic drag and rolling resistance forces
         v=self.vx*self.vx+self.vy*self.vy
