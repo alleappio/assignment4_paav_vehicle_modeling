@@ -25,7 +25,7 @@ class Simulation:
         self.y = 0                      # Y position (m)
         self.theta = 0                  # Heading angle (rad)
         self.vx = 10                     # Longitudinal velocity (m/s)
-        self.vy = 10                     # Lateral velocity (m/s)
+        self.vy = 0                     # Lateral velocity (m/s)
         self.r = 0                      # Yaw rate (rad/s)
 
         # Pacejka's Magic Formula coefficients

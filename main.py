@@ -75,7 +75,7 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
 def main():
     # Simulation parameters
     dt = 0.001        # Time step (s)
-    ax = 0.0            # Constant longitudinal acceleration (m/s^2)
+    ax = 1.0            # Constant longitudinal acceleration (m/s^2)
     steer = 0.1         # Constant steering angle (rad)
     sim_time = 5      # Simulation duration in seconds
     steps = int(sim_time / dt)  # Simulation steps (30 seconds)
