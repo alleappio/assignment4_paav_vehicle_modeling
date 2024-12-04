@@ -14,6 +14,7 @@ def plot_comparison(results, labels, title, xlabel, ylabel):
     plt.ylabel(ylabel)
     plt.legend()
     plt.grid(True)
+    plt.savefig(f"figures/exercise3/condition2/{title}.png")
     plt.show()
 
 
@@ -28,6 +29,7 @@ def plot_trajectory(x_vals, y_vals, labels):
     plt.legend()
     plt.grid(True)
     plt.axis("equal")
+    plt.savefig(f"figures/exercise3/condition2/trajectory.png")
     plt.show()
 
 
@@ -55,7 +57,7 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
     for step in range(steps):
         # Make one step simulation via model integration
         # Calculate sinusoidal steering angle
-        #time = step * dt
+        # time = step * dt
         # steer = steer_max * np.sin(2 * np.pi * frequency * time)  # Sinusoidal steering angle
 
         sim.integrate(ax, steer)
@@ -106,10 +108,10 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
 
 def main():
     # Simulation parameters
-    dt = 0.001        # Time step (s)
+    dt = 0.08        # Time step (s)
     ax = 1.0            # Constant longitudinal acceleration (m/s^2)
     steer = 0.055         # Constant steering angle (rad)
-    sim_time = 5      # Simulation duration in seconds
+    sim_time = 10      # Simulation duration in seconds
     steps = int(sim_time / dt)  # Simulation steps (30 seconds)
 
     # List of configurations
