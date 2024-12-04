@@ -44,7 +44,9 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
 
     # Storage for state variables and slip angles
     x_vals, y_vals, theta_vals, vx_vals, vy_vals, r_vals = [], [], [], [], [], []
+    Fyf_vals, Fyr_vals = [], []  # Lateral forces
     alpha_f_vals, alpha_r_vals = [], []  # Slip angles
+    beta_vals = []                 # Slip angles
 
     # Max steer and frequency for sinusoidal steer commands
     steer_max = 0.1
@@ -53,8 +55,8 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
     for step in range(steps):
         # Make one step simulation via model integration
         # Calculate sinusoidal steering angle
-        time = step * dt
-        steer = steer_max * np.sin(2 * np.pi * frequency * time)  # Sinusoidal steering angle
+        #time = step * dt
+        # steer = steer_max * np.sin(2 * np.pi * frequency * time)  # Sinusoidal steering angle
 
         sim.integrate(ax, steer)
 
@@ -67,20 +69,46 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
         r_vals.append(sim.r)
 
         # Calculate slip angles for front and rear tires
-        alpha_f = steer - ((sim.vy+lf*sim.r)/sim.vx)  # Front tire slip angle
-        alpha_r = steer - ((sim.vy-lr*sim.r)/sim.vx)         # Rear tire slip angle
+        alpha_f = steer - np.arctan((sim.vy+sim.l_f*sim.r)/sim.vx)  # Front tire slip angle
+        alpha_r = - np.arctan((sim.vy-sim.l_r*sim.r)/sim.vx)         # Rear tire slip angle
+
+        Fyf, Fyr = 0, 0
+        if model == "linear":
+            # Vertical forces (nominal vertical load)
+            Fz_f_nominal = (sim.l_r/sim.l_wb)*sim.mass*9.81
+            Fz_r_nominal = (sim.l_f/sim.l_wb)*sim.mass*9.81
+
+            # Front and rear lateral forces
+            Fyf = Fz_f_nominal * sim.Cf * alpha_f
+            Fyr = Fz_r_nominal * sim.Cr * alpha_r
+
+        if model == "nonlinear":
+            # Vertical forces (nominal vertical load)
+            Fz_f_nominal = (sim.l_r/sim.l_wb)*sim.mass*9.81
+            Fz_r_nominal = (sim.l_f/sim.l_wb)*sim.mass*9.81
+
+            # Front and rear lateral forces
+            Fyf = Fz_f_nominal * sim.D * np.sin(sim.C*np.arctan(sim.B*alpha_f - sim.E*(sim.B * alpha_f - np.arctan(sim.B*alpha_f))))
+            Fyr = Fz_r_nominal * sim.D * np.sin(sim.C*np.arctan(sim.B*alpha_r - sim.E*(sim.B * alpha_r - np.arctan(sim.B*alpha_r))))
+            
+        Fyf_vals.append(Fyf)
+        Fyr_vals.append(Fyr)
 
         alpha_f_vals.append(alpha_f)
         alpha_r_vals.append(alpha_r)
 
-    return x_vals, y_vals, theta_vals, vx_vals, vy_vals, r_vals, alpha_f_vals, alpha_r_vals
+        # Calculate side slip angles beta
+        beta = np.arctan(sim.vy/sim.vx)
+        beta_vals.append(beta)
+
+    return x_vals, y_vals, theta_vals, vx_vals, vy_vals, r_vals, alpha_f_vals, alpha_r_vals, Fyf_vals, Fyr_vals, beta_vals
 
 
 def main():
     # Simulation parameters
     dt = 0.001        # Time step (s)
     ax = 1.0            # Constant longitudinal acceleration (m/s^2)
-    steer = 0.1         # Constant steering angle (rad)
+    steer = 0.055         # Constant steering angle (rad)
     sim_time = 5      # Simulation duration in seconds
     steps = int(sim_time / dt)  # Simulation steps (30 seconds)
 
@@ -111,6 +139,9 @@ def main():
     r_results = [result[5] for result in all_results]
     alpha_f_results = [result[6] for result in all_results]
     alpha_r_results = [result[7] for result in all_results]
+    Fyf_results = [result[8] for result in all_results]
+    Fyr_results = [result[9] for result in all_results]
+    beta_results = [result[10] for result in all_results]
 
     # Plot comparisons for each state variable
     plot_trajectory(x_results, y_results, labels)
@@ -120,6 +151,9 @@ def main():
     plot_comparison(r_results, labels, "Yaw Rate Comparison", "Time Step", "Yaw Rate (rad/s)")
     plot_comparison(alpha_f_results, labels, "Front Slip Angle Comparison", "Time Step", "Slip Angle (rad) - Front")
     plot_comparison(alpha_r_results, labels, "Rear Slip Angle Comparison", "Time Step", "Slip Angle (rad) - Rear")
+    plot_comparison(Fyf_results, labels, "Front Lateral Forces Comparison", "Time Step", "Lateral Force (N) - Front")
+    plot_comparison(Fyr_results, labels, "Rear Lateral Forces Comparison", "Time Step", "Lateral Force (N) - Rear")
+    plot_comparison(beta_results, labels, "Side Slip Angle Comparison", "Time Step", "Side Slip Angle (rad)")
 
 
 if __name__ == "__main__":

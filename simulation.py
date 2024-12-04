@@ -25,9 +25,10 @@ class Simulation:
         self.x = 0                      # X position (m)
         self.y = 0                      # Y position (m)
         self.theta = 0                  # Heading angle (rad)
-        self.vx = 10                     # Longitudinal velocity (m/s)
+        self.vx = 24                     # Longitudinal velocity (m/s)
         self.vy = 0                     # Lateral velocity (m/s)
         self.r = 0                      # Yaw rate (rad/s)
+        self.beta = 0
 
         # Pacejka's Magic Formula coefficients
         self.B, self.C, self.D, self.E = 7.1433, 1.3507, 1.0489, -0.0074722
@@ -68,8 +69,8 @@ class Simulation:
         Fz_r_nominal = (self.l_f/self.l_wb)*self.mass*9.81
 
         # Front and rear lateral forces
-        Fyf = Fz_f_nominal*self.Cf * alpha_f
-        Fyr = Fz_r_nominal*self.Cr * alpha_r
+        Fyf = Fz_f_nominal * self.Cf * alpha_f
+        Fyr = Fz_r_nominal * self.Cr * alpha_r
 
         # Aerodynamic drag and rolling resistance forces
         v = self.vx * self.vx + self.vy * self.vy
