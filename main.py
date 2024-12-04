@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from simulation import Simulation
 
+
 def plot_comparison(results, labels, title, xlabel, ylabel):
     """ Plot comparison of results for a specific state variable. """
     plt.figure(figsize=(10, 6))
@@ -14,6 +15,7 @@ def plot_comparison(results, labels, title, xlabel, ylabel):
     plt.legend()
     plt.grid(True)
     plt.show()
+
 
 def plot_trajectory(x_vals, y_vals, labels):
     """ Plot 2D trajectory (x vs y) for all simulation configurations. """
@@ -27,6 +29,7 @@ def plot_trajectory(x_vals, y_vals, labels):
     plt.grid(True)
     plt.axis("equal")
     plt.show()
+
 
 def run_simulation(ax, steer, dt, integrator, model, steps=500):
     """ Run a simulation with the given parameters and return all states. """
@@ -54,7 +57,7 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
         steer = steer_max * np.sin(2 * np.pi * frequency * time)  # Sinusoidal steering angle
 
         sim.integrate(ax, steer)
-        
+
         # Append each state to corresponding list
         x_vals.append(sim.x)
         y_vals.append(sim.y)
@@ -66,11 +69,12 @@ def run_simulation(ax, steer, dt, integrator, model, steps=500):
         # Calculate slip angles for front and rear tires
         alpha_f = steer - ((sim.vy+lf*sim.r)/sim.vx)  # Front tire slip angle
         alpha_r = steer - ((sim.vy-lr*sim.r)/sim.vx)         # Rear tire slip angle
-            
+
         alpha_f_vals.append(alpha_f)
         alpha_r_vals.append(alpha_r)
 
     return x_vals, y_vals, theta_vals, vx_vals, vy_vals, r_vals, alpha_f_vals, alpha_r_vals
+
 
 def main():
     # Simulation parameters
@@ -116,6 +120,7 @@ def main():
     plot_comparison(r_results, labels, "Yaw Rate Comparison", "Time Step", "Yaw Rate (rad/s)")
     plot_comparison(alpha_f_results, labels, "Front Slip Angle Comparison", "Time Step", "Slip Angle (rad) - Front")
     plot_comparison(alpha_r_results, labels, "Rear Slip Angle Comparison", "Time Step", "Slip Angle (rad) - Rear")
+
 
 if __name__ == "__main__":
     main()
