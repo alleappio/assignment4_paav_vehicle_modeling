@@ -60,7 +60,7 @@ class Simulation:
         
         # Tire slip angles
         alpha_f = delta - ((self.vy+self.l_f*self.r)/self.vx)  # Front tire slip angle
-        alpha_r = delta - ((self.vy-self.l_r*self.r)/self.vx)         # Rear tire slip angle
+        alpha_r = -((self.vy-self.l_r*self.r)/self.vx)         # Rear tire slip angle
 
         # Vertical forces (nominal vertical load)
         Fz_f_nominal = (self.l_r/self.l_wb)*self.mass*9.81
