@@ -1,7 +1,5 @@
 # ASSIGNMENT 4 PAAS: Vehicle modeling and simulation
 
----
-
 ## Descrizione
 Il progetto ha lo scopo di implementare un semplice vehicle model e di simularne il comportamento mentre segue alcune traiettorie
 
